@@ -270,16 +270,17 @@ class SearchResultSet:
         return self.__search_query
 
     @property
-    def length(self):
-        return self.__total_results
-
-    @property
-    def items(self):
-        return self.__search_results
-
-    @property
     def is_truncated(self):
         return self.__truncated
+
+    def __len__(self):
+        return self.__total_results
+
+    def __getitem__(self, item):
+        try:
+            return self.__search_results[item]
+        except IndexError as e:
+            raise IndexError('No value at index {}'.format(item))
 
     def __iter__(self):
         return self
