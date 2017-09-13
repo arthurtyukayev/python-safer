@@ -4,7 +4,7 @@
 python-safer is an web scraping API wrapper written in Python for the [Department of Transportation's Safety and Fitness Electronic Records System](http://www.safersys.org/).
 
 Here is how you search for companies using python-safer
-```console
+```python
 from safer import CompanySnapshot
 
 client = CompanySnapshot()
@@ -49,7 +49,7 @@ If there are any problems, just open issue.
 [lxml](https://lxml.de) - the C bindings are needed as well. Just follow the installation instructions, should be fine.\
 ##### Install using pip
 
-```
+```python
 pip install python-safer
 ```
 
@@ -60,7 +60,7 @@ This was written with Python 3.5, but it will probably work for any Python 3 ver
 Be prepared to wait for results, the SAFER CompanySnapshot website is very slow, and half the time it's down.
 
 **Import and create CompanySnapshot**
-```
+```python
 from safer import CompanySnapshot
 
 client = CompanySnapshot()
@@ -71,7 +71,7 @@ client = CompanySnapshot()
 Searching by name will return a SearchResultSet object that can be iterated through,
 each item in the SearchResultSet is a SearchResult object, to get the Company Snapshot of that object
 you can call `get_company_snapshot()`
-```
+```python
 for company in client.search('python'):
     company.get_company_snapshot()
 ```
@@ -81,7 +81,7 @@ Getting the company snapshot will return a Company Object.
 
 Searching by USDOT will return a Company object or raise a `CompanySnapshotNotFoundException` exception for that USDOT.
 
-```
+```python
 company = client.get_by_usdot_number(698887)
 print(company.to_json())
 ---
@@ -92,13 +92,13 @@ print(company.to_json())
 
 Using the `open_url()` function on a Company object, will open the Company Snapshot on the SAFER website.
 
-```
+```python
 company = client.get_by_usdot_number(698887)
 company.open_url()
 ```
 
 **Company Object Properties**
-```
+```python
 company.legal_name
 ---
 'PYTHON CORPORATION'
