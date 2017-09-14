@@ -3,6 +3,8 @@
 
 python-safer is an web scraping API wrapper written in Python for the [Department of Transportation's Safety and Fitness Electronic Records System](http://www.safersys.org/).
 
+### If you plan to use this package in production in any capacity, it's highly recommended to cache all of the results you get from the SAFER website. The SAFER website is highly unreliable and will randomly go down.
+
 Here is how you search for companies using python-safer
 ```python
 from safer import CompanySnapshot
@@ -57,7 +59,7 @@ pip install python-safer
 
 This was written with Python 3.5, but it will probably work for any Python 3 version
 
-Be prepared to wait for results, the SAFER CompanySnapshot website is very slow, and half the time it's down.
+**Be prepared to wait for results, the SAFER CompanySnapshot website is very slow, and half the time it's down.**
 
 **Import and create CompanySnapshot**
 ```python
