@@ -20,7 +20,7 @@ def process_extracted_text(extracted_data):
                 return None
             return extracted_data[0].strip()
     elif isinstance(extracted_data, str):
-        if 'none' in extracted_data.lower():
+        if 'none' in extracted_data.lower() or extracted_data.lower() == '':
             return None
         return extracted_data.strip()
     raise ValueError('Unrecognized parsing result.')
@@ -135,7 +135,7 @@ def process_search_result_html(tree):
 
     # Parses every row of the table of search results.
     for item in tree.xpath("//tr[.//*[@scope='rpw']]")[1:]:
-        c_name = item.xpath(FIELDS['name'])[0].title()
+        c_name = item.xpath(FIELDS['name'])[0]
         c_id = item.xpath(FIELDS['id'])[0]
         # Formatting the state and city properly
         c_location = item.xpath(FIELDS['location'])[0].title().split(', ')
@@ -250,8 +250,8 @@ def process_company_snapshot(tree):
             'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[3]/font/text()'))
         },
         'iep': {
-            'inspections': int(process_extracted_text(us_inspections_table.xpath('tr[2]/td[4]/text()'))),
-            'out_of_service': int(process_extracted_text(us_inspections_table.xpath('tr[3]/td[4]/text()'))),
+            'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[4]/text()')),
+            'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[4]/text()')),
             'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[4]/text()')),
             'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[4]/font/text()'))
         }

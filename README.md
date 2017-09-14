@@ -3,32 +3,31 @@
 
 python-safer is an web scraping API wrapper written in Python for the [Department of Transportation's Safety and Fitness Electronic Records System](http://www.safersys.org/).
 
-### If you plan to use this package in production in any capacity, it's highly recommended to cache all of the results you get from the SAFER website. The SAFER website is highly unreliable and will randomly go down.
+### If you plan to use this package in any capacity, it's highly recommended to cache all of the results you get from the SAFER website. The SAFER website is highly unreliable and will randomly go down.
 
 Here is how you search for companies using python-safer
+
 ```python
 from safer import CompanySnapshot
 
 client = CompanySnapshot()
 
 results = client.search('python')
-print(len(results))
 for company in results:
     print(company)
 ```
 
 ```console
-6
-<SearchResult Python Corporation (698887) from  Lacombe, LA>
-<SearchResult Python Pressure Pumping Llc (2346443) from  Ada, OK>
-<SearchResult Python Services Llc (918670) from  Brighton, CO>
-<SearchResult Python Transport Corp (2379682) from  Dania Beach, FL>
-<SearchResult Python Transports Llc (2642177) from  Fort Worth, TX>
-<SearchResult Python'S Of St Cloud Inc (604262) from  St Cloud, MN>
+<SearchResult PYTHON CORPORATION (698887) from  Lacombe, LA>
+<SearchResult PYTHON PRESSURE PUMPING LLC (2346443) from  Ada, OK>
+<SearchResult PYTHON SERVICES LLC (918670) from  Brighton, CO>
+<SearchResult PYTHON TRANSPORT CORP (2379682) from  Dania Beach, FL>
+<SearchResult PYTHON TRANSPORTS LLC (2642177) from  Fort Worth, TX>
+<SearchResult PYTHON'S OF ST CLOUD INC (604262) from  St Cloud, MN>
 ```
 
 ```python
-company = next(results).get_company_snapshot()
+company = results[0].get_company_snapshot()
 print(company.legal_name)
 ```
 ```console
