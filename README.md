@@ -47,7 +47,7 @@ If there are any problems, just open issue.
 ### Installation
 
 ##### Prerequisites
-[lxml](https://lxml.de) - the C bindings are needed as well. Just follow the installation instructions, should be fine.
+[lxml](http://lxml.de) - the C bindings are needed as well. Just follow the installation instructions, should be fine.
 ##### Install using pip
 
 ```python
