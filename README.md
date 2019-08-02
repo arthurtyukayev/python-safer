@@ -1,7 +1,7 @@
 # python-safer
 [![PyPI version](https://badge.fury.io/py/python-safer.svg)](https://badge.fury.io/py/python-safer)
 
-python-safer is an web scraping API wrapper written in Python for the [Department of Transportation's Safety and Fitness Electronic Records System](https://safer.fmcsa.dot.gov/CompanySnapshot.aspx).
+python-safer is an web scraping API wrapper written in Python to fetch data from the [Department of Transportation's Safety and Fitness Electronic Records System](https://safer.fmcsa.dot.gov/CompanySnapshot.aspx).
 
 ### If you plan to use this package in any capacity, it's highly recommended to cache all of the results you get from the SAFER website. The SAFER website is highly unreliable and will randomly go down.
 

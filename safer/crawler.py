@@ -1,5 +1,6 @@
 from lxml import etree
 from io import StringIO
+from lxml import html
 
 
 def parse_html_to_tree(html_string):
@@ -13,6 +14,5 @@ def parse_html_to_tree(html_string):
     """
     if 'Sorry, no records matching' in html_string or 'BEGIN: No records found error' in html_string:
         return None
-    parser = etree.HTMLParser()
-    tree = etree.parse(StringIO(html_string), parser)
+    tree = html.fromstring(html_string)
     return tree
