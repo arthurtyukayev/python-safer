@@ -31,12 +31,12 @@ def process_final_dictionary(data):
     # In that case, the value should revert back to a string.
     try:
         data['drivers'] = int(data['drivers'])
-    except TypeError as e:
-        pass
+    except (TypeError, ValueError) as e:
+        data['drivers'] = None
     try:
         data['power_units'] = int(data['power_units'])
-    except TypeError as e:
-        pass
+    except (TypeError, ValueError) as e:
+        data['power_units'] = None
     try:
         data['canada_crashes'] = {
             'tow': int(data['canada_crashes']['tow']),
@@ -44,7 +44,7 @@ def process_final_dictionary(data):
             'injury': int(data['canada_crashes']['injury']),
             'total': int(data['canada_crashes']['total'])
         }
-    except TypeError as e:
+    except (TypeError, ValueError) as e:
         pass
     try:
         data['united_states_crashes'] = {
@@ -53,7 +53,7 @@ def process_final_dictionary(data):
             'injury': int(data['united_states_crashes']['injury']),
             'total': int(data['united_states_crashes']['total'])
         }
-    except TypeError as e:
+    except (TypeError, ValueError) as e:
         pass
     try:
         data['canada_inspections'] = {
@@ -68,7 +68,7 @@ def process_final_dictionary(data):
                 'inspections': int(data['canada_inspections']['vehicle']['inspections'])
             }
         }
-    except TypeError as e:
+    except (TypeError, ValueError) as e:
         pass
     try:
         data['us_inspections'] = {
@@ -97,7 +97,7 @@ def process_final_dictionary(data):
                 'inspections': int(data['united_states_inspections']['iep']['inspections']),
             }
         }
-    except TypeError as e:
+    except (TypeError, ValueError) as e:
         pass
 
     # Formatting Mileage Year to a dictionary

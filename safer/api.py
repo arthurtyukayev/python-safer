@@ -1,18 +1,18 @@
 from requests import Session
 
-SAFER_KEYWORD_URL = 'http://www.safersys.org/keywordx.asp'
-SAFER_QUERY_URL = 'http://www.safersys.org/query.asp'
+SAFER_KEYWORD_URL = 'https://safer.fmcsa.dot.gov/keywordx.asp'
+SAFER_QUERY_URL = 'https://safer.fmcsa.dot.gov/query.asp'
 
 sess = Session()
 sess.headers.update({
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Encoding': 'gzip, deflate',
     'Accept-Language': 'en-US,en;q=0.8,ru;q=0.6',
     'Cache-Control': 'max-age=0',
     'Connection': 'keep-alive',
-    'Host': 'www.safersys.org',
+    'Host': 'safer.fmcsa.dot.gov',
     'Upgrade-Insecure-Requests': '1',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko/20100101 Firefox/68.0'
 })
 
 
