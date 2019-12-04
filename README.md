@@ -38,7 +38,6 @@ PYTHON CORPORATION
 ### Todo
 
 - Write some tests.
-- Implement `CompanySnapshot.get_by_mc_mx_number()` function
 
 ### Issues
 
