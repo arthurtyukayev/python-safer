@@ -53,8 +53,10 @@ class CompanySnapshot:
             # Parsing will return an empty return set if there are no results
             raise CompanySnapshotNotFoundException('The MC or MX number you provided was not found.')
         # Parse out values from HTML tree
-        search_results = process_search_result_html(tree)
-        pass
+        search_results = process_company_snapshot(tree)
+        return Company(
+            data=search_results
+        )
 
     @staticmethod
     def get_by_usdot_number(number):
