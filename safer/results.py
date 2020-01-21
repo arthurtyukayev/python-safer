@@ -60,7 +60,7 @@ class Company:
         self.__raw = data
 
         # Building a url for this Company
-        self.__url = 'http://www.safersys.org/query.asp?searchtype=ANY&query_type=queryCarrierSnapshot&query_param=USDOT&original_query_param=NAME&query_string={}'.format(
+        self.__url = 'http://safer.fmcsa.dot.gov/query.asp?searchtype=ANY&query_type=queryCarrierSnapshot&query_param=USDOT&original_query_param=NAME&query_string={}'.format(
             self.__usdot)
         self.__raw['url'] = self.__url
 
