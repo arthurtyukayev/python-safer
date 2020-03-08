@@ -65,6 +65,14 @@ class Company:
         self.__raw['url'] = self.__url
 
     @property
+    def united_states_crashes(self):
+        return self.__united_states_crashes
+        
+    @property
+    def saftey_type(self):
+        return self.__safety_type
+
+    @property
     def operating_status(self):
         return self.__operating_status
     
