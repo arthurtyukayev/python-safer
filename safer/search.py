@@ -51,7 +51,7 @@ class CompanySnapshot:
         tree = parse_html_to_tree(r.text)
         if not tree:
             # Parsing will return an empty return set if there are no results
-            raise CompanySnapshotNotFoundException('The MC or MX number' +number+' was not found.')
+            raise CompanySnapshotNotFoundException('The MC or MX number' +(str(number))+' was not found.')
         # Parse out values from HTML tree
         search_results = process_company_snapshot(tree)
         return Company(
@@ -77,7 +77,7 @@ class CompanySnapshot:
         tree = parse_html_to_tree(r.text)
         if not tree:
             # Parsing will return an empty return set if there are no results
-            raise CompanySnapshotNotFoundException('The USDOT number '+number+' was not found, or is marked inactive.')
+            raise CompanySnapshotNotFoundException('The USDOT number '+(str(number))+' was not found, or is marked inactive.')
         # Parse out values from HTML tree
         search_results = process_company_snapshot(tree)
         return Company(
