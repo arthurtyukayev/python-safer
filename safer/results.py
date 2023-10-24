@@ -30,6 +30,7 @@ class Company:
         self.__mailing_address = data['mailing_address']
         self.__physical_address = data['physical_address']
         self.__carrier_operation = data['carrier_operation']
+        self.__hm_shipper_operation = data['hm_shipper_operation']
         self.__mcs_150_mileage_year = data['mcs_150_mileage_year']
         self.__mc_mx_ff_numbers = data['mc_mx_ff_numbers']
         self.__operation_classification = data['operation_classification']
@@ -130,7 +131,11 @@ class Company:
 
     @property
     def carrier_operation(self):
-        return self.__carrier_operation
+        return self.__carrier_operation    
+
+    @property
+    def hm_shipper_operation(self):
+        return self.__hm_shipper_operation
 
     @property
     def mailing_address(self):
@@ -183,7 +188,7 @@ class Company:
         return self.__usdot == other.__usdot
 
     def __str__(self):
-        return "<Company {} ({}) from  {}>".format(self.__legal_name, self.__usdot, self.__physical_address)
+        return "<Company {} ({}) from {}>".format(self.__legal_name, self.__usdot, self.__physical_address)
 
     def __repr__(self):
         return "Company({})".format(self.__usdot)

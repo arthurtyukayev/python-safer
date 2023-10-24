@@ -166,11 +166,15 @@ def process_company_snapshot(tree):
     """
 
     general_info_table = tree.xpath('//table')[6]
-    us_inspections_table = tree.xpath('//table')[19]
-    us_crashes_table = tree.xpath('//table')[20]
-    canada_inspections_table = tree.xpath('//table')[21]
-    canada_crashes_table = tree.xpath('//table')[22]
-    safety_rating_table = tree.xpath('//table')[23]
+
+    operation_classification_table = tree.xpath('//table[@summary="Operation Classification"]')
+    cargo_carried_table = tree.xpath('//table[@summary="Cargo Carried"]')
+    carrier_operation_table = tree.xpath('//table[@summary="Carrier Operation"]')
+    hm_shipper_operation_table = tree.xpath('//table[@summary="Shipper Operation"]')
+    safety_rating_table = tree.xpath('//table[@summary="Review Information"]')
+
+    inspections_tables = tree.xpath('//table[@summary="Inspections"]')
+    crashes_tables = tree.xpath('//table[@summary="Crashes"]')
 
     FIELDS = {
         'entity_type': 'tr[2]/td/text()',
@@ -203,95 +207,123 @@ def process_company_snapshot(tree):
     else:
         FIELDS['operating_status'] = process_extracted_text(general_info_table.xpath('tr[3]/td[1]/text()'))
 
-    # Getting Operation Classifications from a list of classifications
+    # Getting Operation Classifications from a list of classifications if the table exists in the HTML
     # Checks the HTML for all table rows that contain and X next to them
-    FIELDS['operation_classification'] = []
-    for classification in tree.xpath('//table')[7].xpath(
-            "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
-        FIELDS['operation_classification'].append(classification)
-    last_val = tree.xpath('//table')[7].xpath("tr[2]/td[3]/table/tr[5]/td[2]/text()")
-    if len(last_val) > 0:
-        FIELDS['operation_classification'].append(process_extracted_text(last_val))
+    if len(operation_classification_table) == 1:
+        FIELDS['operation_classification'] = []
+        operation_classification_table = operation_classification_table.pop(0)
+        for classification in operation_classification_table.xpath(
+                "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
+            FIELDS['operation_classification'].append(classification)
+        last_val = operation_classification_table.xpath("tr[2]/td[3]/table/tr[5]/td[2]/text()")
+        if len(last_val) > 0:
+            FIELDS['operation_classification'].append(process_extracted_text(last_val))
 
     # Parsing out Carrier Operation from the list of types
     # Checks the HTML for all table rows that contain and X next to them
-    FIELDS['carrier_operation'] = []
-    for operation in tree.xpath('//table')[11].xpath(
-            "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
-        FIELDS['carrier_operation'].append(operation)
+    if len(carrier_operation_table) == 1:
+        FIELDS['carrier_operation'] = []
+        carrier_operation_table = carrier_operation_table.pop(0)
+        for operation in carrier_operation_table.xpath(
+                "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
+            FIELDS['carrier_operation'].append(operation)
 
-    FIELDS['cargo_carried'] = []
-    # Parsing out the type of cargo this carrier is authorized or carry
+    # Parsing out Shipper Opertation from the list of types if the table exists in the HTML
+    # Checks the HTML for all table rows that contain and X next to thema
+    if len(hm_shipper_operation_table) == 1:
+        FIELDS['hm_shipper_operation'] = []
+        hm_shipper_operation_table = hm_shipper_operation_table.pop(0)
+        for operation in hm_shipper_operation_table.xpath(
+                "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
+            FIELDS['hm_shipper_operation'].append(operation)
+    else:
+        FIELDS['hm_shipper_operation'] = None
+        
+
+    # Parsing out the type of cargo this carrier is authorized or carry if the table exists in the HTML
     # Checks the HTML for all table rows that contain and X next to them
-    for cargo in tree.xpath('//table')[15].xpath(
-            "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
-        FIELDS['cargo_carried'].append(cargo)
+    if len(cargo_carried_table) == 1:
+        FIELDS['cargo_carried'] = []
+        cargo_carried_table = cargo_carried_table.pop(0)
+        for cargo in cargo_carried_table.xpath(
+                "tr[2]/td/table/tr[.//td[@class='queryfield']/text() = 'X']/td/font/text()"):
+            FIELDS['cargo_carried'].append(cargo)
 
     """ Parsing the data from tables into nested dictionaries. """
 
-    # Parsing the inspections in the United Status
-    FIELDS['united_states_inspections'] = {
-        'vehicle': {
-            'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[1]/text()')),
-            'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[1]/text()')),
-            'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[1]/text()')),
-            'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[1]/font/text()'))
-        },
-        'driver': {
-            'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[2]/text()')),
-            'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[2]/text()')),
-            'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[2]/text()')),
-            'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[2]/font/text()'))
-        },
-        'hazmat': {
-            'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[3]/text()')),
-            'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[3]/text()')),
-            'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[3]/text()')),
-            'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[3]/font/text()'))
-        },
-        'iep': {
-            'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[4]/text()')),
-            'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[4]/text()')),
-            'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[4]/text()')),
-            'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[4]/font/text()'))
+    # Parsing the inspections in the United Status if the tables exist in the HTML
+    if len(inspections_tables) == 2:
+        us_inspections_table = inspections_tables[0]
+        FIELDS['united_states_inspections'] = {
+            'vehicle': {
+                'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[1]/text()')),
+                'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[1]/text()')),
+                'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[1]/text()')),
+                'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[1]/font/text()'))
+            },
+            'driver': {
+                'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[2]/text()')),
+                'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[2]/text()')),
+                'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[2]/text()')),
+                'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[2]/font/text()'))
+            },
+            'hazmat': {
+                'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[3]/text()')),
+                'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[3]/text()')),
+                'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[3]/text()')),
+                'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[3]/font/text()'))
+            },
+            'iep': {
+                'inspections': process_extracted_text(us_inspections_table.xpath('tr[2]/td[4]/text()')),
+                'out_of_service': process_extracted_text(us_inspections_table.xpath('tr[3]/td[4]/text()')),
+                'out_of_service_percent': process_extracted_text(us_inspections_table.xpath('tr[4]/td[4]/text()')),
+                'national_average': process_extracted_text(us_inspections_table.xpath('tr[5]/td[4]/font/text()'))
+            }
         }
-    }
 
-    # Parsing the crashes in the United States
-    FIELDS['united_states_crashes'] = {
-        'fatal': process_extracted_text(us_crashes_table.xpath('tr[2]/td[1]/text()')),
-        'injury': process_extracted_text(us_crashes_table.xpath('tr[2]/td[2]/text()')),
-        'tow': process_extracted_text(us_crashes_table.xpath('tr[2]/td[3]/text()')),
-        'total': process_extracted_text(us_crashes_table.xpath('tr[2]/td[4]/text()'))
-    }
+    # Parsing the crashes in the United States if the tables exist in the HTML
+    if len(crashes_tables) == 2:
+        us_crashes_table = crashes_tables[0]
+        FIELDS['united_states_crashes'] = {
+            'fatal': process_extracted_text(us_crashes_table.xpath('tr[2]/td[1]/text()')),
+            'injury': process_extracted_text(us_crashes_table.xpath('tr[2]/td[2]/text()')),
+            'tow': process_extracted_text(us_crashes_table.xpath('tr[2]/td[3]/text()')),
+            'total': process_extracted_text(us_crashes_table.xpath('tr[2]/td[4]/text()'))
+        }
 
-    # Parsing the inspections in Canada
-    FIELDS['canada_inspections'] = {
-        "vehicle": {
-            'inspections': process_extracted_text(canada_inspections_table.xpath('tr[2]/td[1]/text()')),
-            'out_of_service': process_extracted_text(canada_inspections_table.xpath('tr[3]/td[1]/text()')),
-            'out_of_service_percent': process_extracted_text(canada_inspections_table.xpath('tr[4]/td[1]/text()'))
-        },
-        "driver": {
-            'inspections': process_extracted_text(canada_inspections_table.xpath('tr[2]/td[2]/text()')),
-            'out_of_service': process_extracted_text(canada_inspections_table.xpath('tr[3]/td[2]/text()')),
-            'out_of_service_percent': process_extracted_text(canada_inspections_table.xpath('tr[4]/td[2]/text()'))
-        },
-    }
+    # Parsing the inspections in Canada if the tables exist in the HTML
+    if len(inspections_tables) == 2:
+        canada_inspections_table = inspections_tables[1]
+        FIELDS['canada_inspections'] = {
+            "vehicle": {
+                'inspections': process_extracted_text(canada_inspections_table.xpath('tr[2]/td[1]/text()')),
+                'out_of_service': process_extracted_text(canada_inspections_table.xpath('tr[3]/td[1]/text()')),
+                'out_of_service_percent': process_extracted_text(canada_inspections_table.xpath('tr[4]/td[1]/text()'))
+            },
+            "driver": {
+                'inspections': process_extracted_text(canada_inspections_table.xpath('tr[2]/td[2]/text()')),
+                'out_of_service': process_extracted_text(canada_inspections_table.xpath('tr[3]/td[2]/text()')),
+                'out_of_service_percent': process_extracted_text(canada_inspections_table.xpath('tr[4]/td[2]/text()'))
+            },
+        }
 
-    # Parsing the crashes in Canada
-    FIELDS['canada_crashes'] = {
-        'fatal': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[1]/text()')),
-        'injury': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[2]/text()')),
-        'tow': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[3]/text()')),
-        'total': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[4]/text()')),
-    }
+    # Parsing the crashes in Canada if the tables exist in the HTML
+    if len(crashes_tables) == 2:
+        canada_crashes_table = crashes_tables[1]
+        FIELDS['canada_crashes'] = {
+            'fatal': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[1]/text()')),
+            'injury': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[2]/text()')),
+            'tow': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[3]/text()')),
+            'total': process_extracted_text(canada_crashes_table.xpath('tr[2]/td[4]/text()')),
+        }
 
-    # Parsing the Safety Rating
-    FIELDS['safety_rating_date'] = process_extracted_text(safety_rating_table.xpath('tr[2]/td[1]/text()'))
-    FIELDS['safety_review_date'] = process_extracted_text(safety_rating_table.xpath('tr[2]/td[2]/text()'))
-    FIELDS['safety_rating'] = process_extracted_text(safety_rating_table.xpath('tr[3]/td[1]/text()'))
-    FIELDS['safety_type'] = process_extracted_text(safety_rating_table.xpath('tr[3]/td[2]/text()'))
+    # Parsing the Safety Rating if it exists in the HTML
+    if len(safety_rating_table) == 1:
+        safety_rating_table = safety_rating_table.pop(0)
+        FIELDS['safety_rating_date'] = process_extracted_text(safety_rating_table.xpath('tr[2]/td[1]/text()'))
+        FIELDS['safety_review_date'] = process_extracted_text(safety_rating_table.xpath('tr[2]/td[2]/text()'))
+        FIELDS['safety_rating'] = process_extracted_text(safety_rating_table.xpath('tr[3]/td[1]/text()'))
+        FIELDS['safety_type'] = process_extracted_text(safety_rating_table.xpath('tr[3]/td[2]/text()'))
 
     # Parsing the latest update date.
     FIELDS['latest_update'] = process_extracted_text(tree.xpath("//b/font[@color='#0000C0']/text()")[-1])
