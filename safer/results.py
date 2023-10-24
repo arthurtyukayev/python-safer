@@ -1,11 +1,11 @@
+import re
 from datetime import datetime
 from json import dumps
-from webbrowser import open
+from webbrowser import open as open_browser
 from dateutil import parser
 from safer.api import api_call_get_usdot
 from safer.crawler import parse_html_to_tree
 from safer.html import process_company_snapshot
-import re
 
 
 class Company:
@@ -77,6 +77,7 @@ class Company:
         self.__raw = data
 
         # Building a url for this Company
+        # pylint: disable-next=line-too-long
         self.__url = "http://safer.fmcsa.dot.gov/query.asp?searchtype=ANY&query_type=queryCarrierSnapshot&query_param=USDOT&original_query_param=NAME&query_string={}".format(
             self.__usdot
         )
@@ -97,6 +98,10 @@ class Company:
     @property
     def safety_rating(self):
         return self.__safety_rating
+
+    @property
+    def safety_type(self):
+        return self.__safety_type
 
     @property
     def mcs_150_mileage_year(self):
@@ -129,6 +134,10 @@ class Company:
     @property
     def power_units(self):
         return self.__power_units
+
+    @property
+    def united_states_crashes(self):
+        return self.__united_states_crashes
 
     @property
     def united_states_inspections(self):
@@ -202,7 +211,7 @@ class Company:
         """
         Compares two Companies
         """
-        return self.__usdot == other.__usdot
+        return self.__usdot == other.usdot
 
     def __str__(self):
         return "<Company {} ({}) from {}>".format(
@@ -219,7 +228,7 @@ class Company:
         return self.__raw
 
     def open_url(self):
-        open(self.__url)
+        open_browser(self.__url)
 
 
 class SearchResult:
@@ -259,7 +268,7 @@ class SearchResult:
         """
         Compares two search result objects
         """
-        return self.__result_id == other.__result_id
+        return self.__result_id == other.usdot
 
     def __str__(self):
         return "<SearchResult {} ({}) from  {}>".format(
@@ -288,7 +297,7 @@ class SearchResultSet:
         self.__search_results = [SearchResult(x) for x in results]
         self.__index = -1
         self.__search_query = search_query
-        self.__truncated = True if len(results) > 500 else False
+        self.__truncated = len(results) > 500
         self.__total_results = len(results)
 
     @property
@@ -305,7 +314,7 @@ class SearchResultSet:
     def __getitem__(self, item):
         try:
             return self.__search_results[item]
-        except IndexError as e:
+        except IndexError:
             raise IndexError("No value at index {}".format(item))
 
     def __iter__(self):

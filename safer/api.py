@@ -13,7 +13,8 @@ sess.headers.update(
         "Connection": "keep-alive",
         "Host": "safer.fmcsa.dot.gov",
         "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko/20100101 Firefox/68.0",
+        "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0) Gecko/20100101 Firefox/68.0",
     }
 )
 
