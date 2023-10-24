@@ -125,6 +125,7 @@ print(company.to_json())
   "carrier_operation": [
     "Interstate"
   ],
+  "hm_shipper_operation": null,
   "safety_review_date": null,
   "canada_crashes": {
     "injury": 0,

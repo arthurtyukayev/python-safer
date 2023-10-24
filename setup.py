@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='python-safer',
-    version='1.4',
+    version='1.5',
     packages=['safer'],
     description="A web scraping API written in Python to fetch data from the Department of Transportation's Safety and "
                 "Fitness Electronic Records System http://www.safersys.org/",

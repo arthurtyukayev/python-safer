@@ -1,8 +1,6 @@
-# Basic Exception to handle not found companies
 class CompanySnapshotNotFoundException(Exception):
-    pass
-
+    """Exception raised when a company not found"""
 
 # Basic Exception to raise when SAFER is down
 class SAFERUnreachableException(Exception):
-    pass
+    """Exception raised when SAFER is down"""
