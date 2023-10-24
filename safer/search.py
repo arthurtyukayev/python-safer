@@ -17,13 +17,15 @@ class CompanySnapshot:
         :param name: A company name.
         :return: SearchResultSet Class with multiple SearchResults.
         """
-        if name == '':
+        if name == "":
             raise ValueError("'name' parameter must not be empty")
 
         # Make request
         r = api_call_search(name)
         if r.status_code > 499:
-            raise SAFERUnreachableException('The SAFER website is currently unreachable.')
+            raise SAFERUnreachableException(
+                "The SAFER website is currently unreachable."
+            )
         # Parse HTML result to tree
         tree = parse_html_to_tree(r.text)
         if tree is None or not len(tree):
@@ -46,17 +48,19 @@ class CompanySnapshot:
 
         r = api_call_get_mcmx(mcmx=number)
         if r.status_code > 499:
-            raise SAFERUnreachableException('The SAFER website is currently unreachable.')
+            raise SAFERUnreachableException(
+                "The SAFER website is currently unreachable."
+            )
         # Parse HTML result to tree
         tree = parse_html_to_tree(r.text)
         if tree is None or not len(tree):
             # Parsing will return an empty return set if there are no results
-            raise CompanySnapshotNotFoundException('The MC or MX number you provided was not found.')
+            raise CompanySnapshotNotFoundException(
+                "The MC or MX number you provided was not found."
+            )
         # Parse out values from HTML tree
         search_results = process_company_snapshot(tree)
-        return Company(
-            data=search_results
-        )
+        return Company(data=search_results)
 
     @staticmethod
     def get_by_usdot_number(number):
@@ -72,14 +76,16 @@ class CompanySnapshot:
 
         r = api_call_get_usdot(usdot=number)
         if r.status_code > 499:
-            raise SAFERUnreachableException('The SAFER website is currently unreachable.')
+            raise SAFERUnreachableException(
+                "The SAFER website is currently unreachable."
+            )
         # Parse HTML result to tree
         tree = parse_html_to_tree(r.text)
         if tree is None or not len(tree):
             # Parsing will return an empty return set if there are no results
-            raise CompanySnapshotNotFoundException('The USDOT number provided was not found.')
+            raise CompanySnapshotNotFoundException(
+                "The USDOT number provided was not found."
+            )
         # Parse out values from HTML tree
         search_results = process_company_snapshot(tree)
-        return Company(
-            data=search_results
-        )
+        return Company(data=search_results)
