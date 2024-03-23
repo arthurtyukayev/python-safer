@@ -118,3 +118,4 @@ temp/
 
 # IDE
 .idea/*
+debug_company.py
