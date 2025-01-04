@@ -168,6 +168,11 @@ def process_final_dictionary(data):
         ),
     }
 
+    data["safety_rating_date"] = None
+    data["safety_review_date"] = None
+    data["safety_rating"] = None
+    data["safety_type"] = None
+
     # HTML Returns -- for the Duns number when it should just be None or blank
     data["duns_number"] = data["duns_number"] if data["duns_number"] != "--" else None
     data["state_carrier_id"] = (
@@ -277,15 +282,18 @@ def process_company_snapshot(tree):
     )
 
     # Getting Operating Status out of HTML, must be done outside of loop because it requires more decisiveness
-    if not isinstance(
-        process_extracted_text(general_info_table.xpath("tr[8]/td")),
-        list,
-    ):
-        operating_status_data_list = general_info_table.xpath(
-            "tr[8]/td[1]/font/b/text()"
+    operating_status_data_items_length = len(general_info_table.xpath("tr[8]/td"))
+    if operating_status_data_items_length > 0:
+        operating_status_font_wrapped_based = process_extracted_text(
+            general_info_table.xpath("tr[8]/td[1]/font/b/text()")
         )
-        operating_authority_status = get_first_item_or_none(operating_status_data_list)
-        parsed_fields["operating_authority_status"] = operating_authority_status
+        operating_status_non_wrapped = process_extracted_text(
+            general_info_table.xpath("tr[8]/td[1]/text()")
+        )
+
+        parsed_fields["operating_authority_status"] = (
+            operating_status_font_wrapped_based or operating_status_non_wrapped
+        )
     else:
         parsed_fields["operating_authority_status"] = None
 
