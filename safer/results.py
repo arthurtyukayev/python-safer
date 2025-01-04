@@ -22,7 +22,7 @@ class Company:
 
         # Mapping values.
         self.__entity_type = data["entity_type"]
-        self.__operating_status = data["operating_status"]
+        self.__operating_authority_status = data["operating_authority_status"]
         self.__legal_name = data["legal_name"]
         self.__dba_name = data["dba_name"]
         self.__duns_number = data["duns_number"]
@@ -84,8 +84,8 @@ class Company:
         self.__raw["url"] = self.__url
 
     @property
-    def operating_status(self):
-        return self.__operating_status
+    def operating_authority_status_status(self):
+        return self.__operating_authority_status
 
     @property
     def safety_review_data(self):
