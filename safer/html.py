@@ -271,9 +271,9 @@ def process_company_snapshot(tree):
 
     parsed_fields = {}
 
-    for item in fields:
-        parsed_fields[item] = process_extracted_text(
-            general_info_table.xpath(fields[item])
+    for item in fields.items():
+        parsed_fields[item[0]] = process_extracted_text(
+            general_info_table.xpath(item[1])
         )
 
     # Out of Service Date comes in as a string 'None' if None
