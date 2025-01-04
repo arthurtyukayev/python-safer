@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="python-safer",
-    version="1.5",
+    version="2.0",
     packages=["safer"],
     description="A web scraping API written in Python to fetch data from the Department of Transportation's Safety and "
     "Fitness Electronic Records System http://www.safersys.org/",
